@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chat</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<%if (isSuccess){%>
+<script>
+    location.href = 'join/<%=roomName%>';
+</script>
+<%} else if(roomName === ''){ %>
+<script>
+    alert("방을 만들지 못했습니다");
+    history.back(-1);
+</script>
+<%}else{%>
+<script>
+    alert("이미 존재하는 방입니다");
+    history.back(-1);
+</script>
+<%}%>
+</body>
+</html>

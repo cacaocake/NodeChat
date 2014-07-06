@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chat</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<%if (isSuccess){%>
+    <h2><%=nickName%>님 환영합니다</h2>
+    <h3>채팅방 목록</h3>
+    <ul>
+        <%for(var i = 0; i < roomList.length; i++){ %>
+        <li><a href="join/<%=roomList[i]%>"><%=roomList[i]%></a> </li>
+        <%}%>
+    </ul>
+
+<form action="/makeRoom" method="post">
+    <label>원하는 방이 없으면 만들어 주세요</label>
+    <input type="text" id="roomName" name="roomName"/>
+    <input type="submit" value="입장" />
+</form>
+<%} else { %>
+    <script>
+        alert("닉네임을 다시 정해 주세요");
+        history.back(-1);
+    </script>
+<%}%>
+</body>
+</html>

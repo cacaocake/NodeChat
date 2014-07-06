@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <form action="/main" method="post">
+        <label>닉네임을 입력해 주세요</label>
+        <input type="text" id="nickName" name="nickName"/>
+        <input type="submit" value="입장" />
+    </form>
+
+  </body>
+</html>

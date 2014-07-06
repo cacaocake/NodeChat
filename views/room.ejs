@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chat</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+
+<%if (isSuccess){%>
+<script>
+    $(document).ready(function() {
+        var room = io.connect('/room');
+        var chatWindow = $('#chatWindow');
+        var messageBox = $('#message');
+        var myName = $('#myName').text();
+        var attendants = $('#attendants');
+        var showMessage = function(msg) {
+            chatWindow.append($('<p>').text(msg));
+            chatWindow.scrollTop(chatWindow.height());
+        };
+
+        room.on('connect', function() {
+            room.emit('join', {roomName:$('#roomName').text(), nickName:myName});
+        });
+
+        room.on('joined', function(data) {
+            if(data.isSuccess) {
+                showMessage(data.nickName + '님이 입장하셨습니다.');
+                attendants.append($('<li>')
+                        .attr('id', 'attendant-'+data.nickName)
+                        .text(data.nickName));
+            }
+        });
+
+        room.on('message', function(data) {
+            showMessage(data.nickName + ' : ' + data.msg);
+        });
+
+        room.on('leaved', function(data) {
+            showMessage(data.nickName + '님이 나가셨습니다.');
+            $('#attendant-'+data.nickName).remove();
+        });
+
+        $('form').submit(function(e) {
+            e.preventDefault();
+            var msg = messageBox.val();
+            if ($.trim(msg) !== '') {
+                showMessage(myName + ' : ' + msg);
+                room.json.send({nickName:myName, msg:msg});
+                messageBox.val('');
+            }
+        });
+
+        $('#leave').click(function(e) {
+            room.emit('leave', {nickName:myName});
+            location.href='/main';
+        });
+    });
+</script>
+
+    <h2 id="roomName"><%=roomName%></h2>
+    <input id="leave" name="leave" type="button" value="나가기" />
+
+    <div id="chatWindow" stype="width:400px; height:400px; overflow:auto; border:1px solid #000; float:left; margin-right:10px;">
+
+    </div>
+
+    <div style='width:100px; height:400px; overflow:auto; border:1px solid #000;'>
+        <p>참가자</p>
+        <ul id = "attendants">
+            <%for(var i = 0; i < attendants.length; i++){ %>
+            <li id="attendant-<%=attendants[i]%>"><%=attendants[i]%></li>
+            <%}%>
+        </ul>
+    </div>
+    <form>
+        <label id="myName"><%=nickName%></label>
+        <input id="message" type="text" style="width:300px;"/>
+        <input type="submit" value="보내기" />
+    </form>
+<%} else { %>
+<script>
+    alert("입장 할 수 없습니다");
+    location.href= 'main';
+</script>
+<%}%>
+</body>
+</html>
