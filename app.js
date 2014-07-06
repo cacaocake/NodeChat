@@ -68,7 +68,7 @@ app.use(function(err, req, res, next) {
 var http = require('http');
 
 var server = http.createServer(app);
-server.listen(80);
+server.listen(18181);
 
 require('./rooms')(server);
 
